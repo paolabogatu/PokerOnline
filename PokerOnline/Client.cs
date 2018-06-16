@@ -30,6 +30,8 @@ namespace PokerOnline
 
             Thread.Sleep(1500);
 
+            ipAddress = String.Equals(ipAddress, "localhost") ? "127.0.0.1" : ipAddress;
+            
             while (! socket.Connected)
             {
                 socket.Connect(IPAddress.Parse(ipAddress), portNumber);
