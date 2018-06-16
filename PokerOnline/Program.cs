@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace PokerOnline
 {
@@ -6,13 +8,15 @@ namespace PokerOnline
     {
         static void Main(string[] args)
         {
+            Thread thread = new Thread(() => StartChatWindow());
+            thread.Start();
 
             Console.SetWindowSize(65, 40);
             Console.BackgroundColor = ConsoleColor.DarkGray;
             // renuntam la scroll bar 
             //setand bufferul la dimensiunea actuala a ferestrei
             Console.BufferHeight = 40;
-            
+
             Console.Title = "Joc de Poker";
             DealCards dc = new DealCards();
             bool quit = false;
@@ -37,6 +41,12 @@ namespace PokerOnline
                 }
 
             }
+        }
+
+        private static void StartChatWindow()
+        {
+            Application.EnableVisualStyles();
+            Application.Run(new Form());
         }
     }
 }
