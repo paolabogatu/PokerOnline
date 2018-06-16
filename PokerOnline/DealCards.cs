@@ -29,7 +29,7 @@ namespace PokerOnline
             getHand();
             sortCards();
             displayCardsForPlayers(clientSocket);
-            evaluateHands();
+            evaluateHands(sortedPlayerHand, sortedOpponentHand);
         }
 
         public void getHand()
@@ -119,7 +119,7 @@ namespace PokerOnline
             }
         }
 
-        public void evaluateHands()
+        public static void evaluateHands(Card[] sortedPlayerHand, Card[] sortedOpponentHand)
         {
             HandEvaluator playerHandEvaluatoar = new HandEvaluator(sortedPlayerHand);
             HandEvaluator opponentHandEvaluator = new HandEvaluator(sortedOpponentHand);

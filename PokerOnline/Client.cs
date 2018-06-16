@@ -101,6 +101,7 @@ namespace PokerOnline
                         }
 
                         DealCards.displayCards(playerHand, opponentHand);
+                        DealCards.evaluateHands(playerHand, opponentHand);
 
                         break;
                     }
