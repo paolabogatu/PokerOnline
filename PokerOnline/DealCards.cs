@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,25 +10,25 @@ namespace PokerOnline
     class DealCards : DeckOfCards
     {
         private Card[] playerHand;
-        private Card[] computerHand;
+        private Card[] opponentHand;
         private Card[] sortedPlayerHand;
-        private Card[] sortedComputerHand;
+        private Card[] sortedOpponentHand;
 
         public DealCards()
         {
             playerHand = new Card[5];
             sortedPlayerHand = new Card[5];
-            computerHand = new Card[5];
-            sortedComputerHand = new Card[5];
+            opponentHand = new Card[5];
+            sortedOpponentHand = new Card[5];
 
 
         }
-        public void Deal()
+        public void Deal(Socket clientSocket)
         {
             setUpDeck(); //creaza cartile si le amesteca
             getHand();
             sortCards();
-            displayCards();
+            displayCardsForPlayers(clientSocket);
             evaluateHands();
         }
 
@@ -39,9 +40,7 @@ namespace PokerOnline
 
             //5 carti pentru pc
             for (int i = 5; i < 10; i++)
-                computerHand[i - 5] = getDeck[i];
-
-
+                opponentHand[i - 5] = getDeck[i];
         }
 
         public void sortCards()
@@ -49,7 +48,7 @@ namespace PokerOnline
             var queryPlayer = from hand in playerHand
                               orderby hand.MyValue
                               select hand;
-            var queryComputer = from hand in computerHand
+            var queryOpponent = from hand in opponentHand
                                 orderby hand.MyValue
                                 select hand;
 
@@ -61,13 +60,36 @@ namespace PokerOnline
             }
 
             index = 0;
-            foreach(var element in queryComputer.ToList())
+            foreach(var element in queryOpponent.ToList())
             {
-                sortedComputerHand[index] = element;
+                sortedOpponentHand[index] = element;
                 index++;
             }
         }
-        public void displayCards()
+
+        public void displayCardsForPlayers(Socket clientSocket)
+        {
+            string clientCards = sortedOpponentHand[0].ToString() + "|"
+                + sortedOpponentHand[1].ToString() + "|"
+                + sortedOpponentHand[2].ToString() + "|"
+                + sortedOpponentHand[3].ToString() + "|"
+                + sortedOpponentHand[4].ToString();
+
+            string serverCards = sortedPlayerHand[0].ToString() + "|"
+                + sortedPlayerHand[1].ToString() + "|"
+                + sortedPlayerHand[2].ToString() + "|"
+                + sortedPlayerHand[3].ToString() + "|"
+                + sortedPlayerHand[4].ToString();
+
+            string msgToSend = "CARDS|" + clientCards + "|" + serverCards;
+
+            clientSocket.Send(Encoding.ASCII.GetBytes(msgToSend));
+
+            // Now display the cards for the server.
+            displayCards(sortedPlayerHand, sortedOpponentHand);
+        }
+
+        public static void displayCards(Card[] sortedPlayerHand, Card[] sortedOpponentHand)
         {
             Console.Clear(); 
             int x = 0; // pozitia cursorului pe care il mutam la stanga si dreapta
@@ -75,71 +97,65 @@ namespace PokerOnline
 
             //display player hand
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Mana jucatorului");
+            Console.WriteLine("Mana ta");
             for (int i = 0; i < 5; i++)
             {
                 DrawCards.DrawCardOutline(x, y);
                 DrawCards.DrawCardSuitValue(sortedPlayerHand[i], x, y);
-                x++; // muta la dreapta 
-
+                x++; // muta la dreapta
             }
-            y = 15; // muta randul pc-ului sub  cartile jucatorului
+
+            y = 15; // muta randul adversarului sub  cartile jucatorului
             x = 0; // reseteaza pozitia lui x
             Console.SetCursorPosition(x, 14);
             Console.ForegroundColor = ConsoleColor.DarkRed;
 
-            Console.WriteLine("Mana CPU");
+            Console.WriteLine("Mana oponentului");
             for (int i = 5; i< 10; i++)
             {
                 DrawCards.DrawCardOutline(x, y);
-                DrawCards.DrawCardSuitValue(sortedComputerHand[i-5], x, y);
+                DrawCards.DrawCardSuitValue(sortedOpponentHand[i-5], x, y);
                 x++; // muta la dreapta
             }
-
-
         }
 
         public void evaluateHands()
         {
-            //jucatorii si CPU sunt creati
             HandEvaluator playerHandEvaluatoar = new HandEvaluator(sortedPlayerHand);
-            HandEvaluator computerHandEvaluator = new HandEvaluator(sortedComputerHand);
-
-
+            HandEvaluator opponentHandEvaluator = new HandEvaluator(sortedOpponentHand);
+            
             Hand playerHand = playerHandEvaluatoar.EvaluateHand();
-            Hand computerHand = computerHandEvaluator.EvaluateHand();
+            Hand opponentHand = opponentHandEvaluator.EvaluateHand();
 
             // aratam ambele maini
-            Console.WriteLine("\n\n\n\n\nMana jucatorului: " + playerHand);
-            Console.WriteLine("\nMana CPU: " + computerHand);
+            Console.WriteLine("\n\n\n\n\nMana ta: " + playerHand);
+            Console.WriteLine("\nMana oponent: " + opponentHand);
 
             //evaluam mainile
-            if(playerHand > computerHand)
+            if(playerHand > opponentHand)
             {
-                Console.WriteLine("Jucatorul a castigat!");
+                Console.WriteLine("Tu ai castigat!");
             }
-            else if(playerHand < computerHand)
+            else if(playerHand < opponentHand)
             {
-                Console.WriteLine("CPU a CASTIGAT!");
+                Console.WriteLine("Adversarul a CASTIGAT!");
             }
             else //daca mainile sunt la fel, se evalueaza valorile
             {
                 //prima evaluare, pentru cel care are cea mai mare valoare
-                if (playerHandEvaluatoar.HandValues.Total > computerHandEvaluator.HandValues.Total)
-                    Console.WriteLine("Jucatorul a CASTIGAT!");
-                else if (playerHandEvaluatoar.HandValues.Total < computerHandEvaluator.HandValues.Total)
-                    Console.WriteLine("CPU a CASTIGAT!");
+                if (playerHandEvaluatoar.HandValues.Total > opponentHandEvaluator.HandValues.Total)
+                    Console.WriteLine("Tu ai CASTIGAT!");
+                else if (playerHandEvaluatoar.HandValues.Total < opponentHandEvaluator.HandValues.Total)
+                    Console.WriteLine("Adversarul a CASTIGAT!");
                 //daca au aceleasi valori
                 //jucatorul cu urmatoarea carte castiga
-                else if (playerHandEvaluatoar.HandValues.HighCard > computerHandEvaluator.HandValues.HighCard)
-                    Console.WriteLine("Jucatorul a CASTIGAT!");
-                else if (playerHandEvaluatoar.HandValues.HighCard < computerHandEvaluator.HandValues.HighCard)
-                    Console.WriteLine("CPU a CASTIGAT!");
+                else if (playerHandEvaluatoar.HandValues.HighCard > opponentHandEvaluator.HandValues.HighCard)
+                    Console.WriteLine("Tu ai CASTIGAT!");
+                else if (playerHandEvaluatoar.HandValues.HighCard < opponentHandEvaluator.HandValues.HighCard)
+                    Console.WriteLine("Adversarul a CASTIGAT!");
                 else
                     Console.WriteLine("Nimeni nu a castigat!");
-
             }
-
         }
     }
 }

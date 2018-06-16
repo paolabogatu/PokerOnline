@@ -13,7 +13,7 @@ namespace PokerOnline
             // Ask clients if they want to host a new game or join an existing one.
             ServerOrClient();
             
-            GameLoop();
+            //GameLoop();
         }
         
         private static void PrepareConsole ()
@@ -58,44 +58,44 @@ namespace PokerOnline
             {
                 // Connect to a server.
 
-                Console.WriteLine("Type the IP address of the server.");
-                string address = Console.ReadLine();
-
                 Console.WriteLine("Player name:");
                 string name = Console.ReadLine();
+
+                Console.WriteLine("Type the IP address of the server.");
+                string address = Console.ReadLine();
 
                 Client client = new Client(address, name);
             }
         }
 
-        private static void GameLoop()
-        {
+        //private static void GameLoop()
+        //{
 
-            DealCards dc = new DealCards();
-            bool quit = false;
+        //    DealCards dc = new DealCards();
+        //    bool quit = false;
 
-            // Bucla de joc.
-            while (!quit)
-            {
-                dc.Deal();
+        //    // Bucla de joc.
+        //    while (!quit)
+        //    {
+        //        dc.Deal();
 
-                char selection = ' ';
-                while (!selection.Equals('Y') && !selection.Equals('N'))
-                {
-                    Console.WriteLine("Play again? Y-N");
-                    selection = Convert.ToChar(Console.ReadLine().ToUpper());
+        //        char selection = ' ';
+        //        while (!selection.Equals('Y') && !selection.Equals('N'))
+        //        {
+        //            Console.WriteLine("Play again? Y-N");
+        //            selection = Convert.ToChar(Console.ReadLine().ToUpper());
 
-                    if (selection.Equals('Y'))
-                        quit = false;
-                    else if (selection.Equals('N'))
-                        quit = true;
-                    else
-                        Console.WriteLine("Invalid Selection. Try again");
+        //            if (selection.Equals('Y'))
+        //                quit = false;
+        //            else if (selection.Equals('N'))
+        //                quit = true;
+        //            else
+        //                Console.WriteLine("Invalid Selection. Try again");
 
-                }
+        //        }
 
-            }
-        }
+        //    }
+        //}
     }
 
 }

@@ -18,6 +18,7 @@ namespace PokerOnline
         private ChatWindow chatWindow;
         private byte[] dataBuffer;
         private string playerName;
+        private DealCards dc;
 
         public Server(string _playerName)
         {
@@ -42,6 +43,8 @@ namespace PokerOnline
             chatWindow.AddMessage("Second player has joined.");
 
             clientSocket.BeginReceive(dataBuffer, 0, dataBuffer.Length, SocketFlags.None, new AsyncCallback(ReceivedNewDataPacket), null);
+
+            GameLoop();
         }
 
         private void ReceivedNewDataPacket(IAsyncResult AR)
@@ -85,6 +88,34 @@ namespace PokerOnline
 
             Application.EnableVisualStyles();
             Application.Run(chatWindow);
+        }
+
+        private void GameLoop()
+        {
+            dc = new DealCards();
+            bool quit = false;
+
+            // Bucla de joc.
+            while (!quit)
+            {
+                dc.Deal(clientSocket);
+
+                char selection = ' ';
+                while (!selection.Equals('Y') && !selection.Equals('N'))
+                {
+                    Console.WriteLine("Play again? Y-N");
+                    selection = Convert.ToChar(Console.ReadLine().ToUpper());
+
+                    if (selection.Equals('Y'))
+                        quit = false;
+                    else if (selection.Equals('N'))
+                        quit = true;
+                    else
+                        Console.WriteLine("Invalid Selection. Try again");
+
+                }
+
+            }
         }
     }
 }

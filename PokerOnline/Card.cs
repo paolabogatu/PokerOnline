@@ -26,5 +26,10 @@ namespace PokerOnline
 
         public SUIT MySuit { get; set; }
         public VALUE MyValue { get; set; }
+
+        public override string ToString()
+        {
+            return MySuit + "," + MyValue;
+        }
     }
 }

@@ -43,14 +43,16 @@ namespace PokerOnline
             if (e.KeyData == Keys.Enter)
             {
                 SendMessage();
+
+                e.SuppressKeyPress = false;
             }
         }
 
         private void SendMessage()
         {
-            if (!String.IsNullOrEmpty(sendTextBox.Text))
+            if (!String.IsNullOrWhiteSpace(sendTextBox.Text.Trim()))
             {
-                string message = String.Format("{0}: {1}", playerName, sendTextBox.Text);
+                string message = String.Format("{0}: {1}", playerName, sendTextBox.Text.Trim());
 
                 socket.Send(Encoding.ASCII.GetBytes("CHAT|" + message));
 

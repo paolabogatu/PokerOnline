@@ -66,7 +66,7 @@ namespace PokerOnline
             Console.SetCursorPosition(x + 4, y + 7);
             Console.Write(card.MyValue);
         }
-        }
-        }
+    }
+}
 
         

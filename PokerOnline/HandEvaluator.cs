@@ -18,12 +18,12 @@ namespace PokerOnline
         FourKind
     }
 
-
     public struct HandValue
     {
         public int Total { get; set; }
         public int HighCard { get; set; }
     }
+
     class HandEvaluator : Card
     {
         private int heartsSum;
@@ -163,7 +163,7 @@ namespace PokerOnline
                 return true;
             }
             return false;
-    }
+        }
         private bool ThreeOfKind()
         {
             //daca 1, 2, 3 carti sunt la fel SAU
@@ -186,7 +186,6 @@ namespace PokerOnline
                 return true;
             }
             return false;
-       
         }
         private bool TwoPairs()
         {

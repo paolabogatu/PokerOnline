@@ -20,10 +20,10 @@ namespace PokerOnline
 
         public Client(string ipAddress, string _playerName)
         {
-            playerName = _playerName;
             portNumber = 1500;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             dataBuffer = new byte[256];
+            playerName = _playerName;
 
             Thread thread = new Thread(() => StartChatWindow());
             thread.Start();
@@ -70,6 +70,37 @@ namespace PokerOnline
                 case "CHAT":
                     {
                         chatWindow.AddMessage(dataComponents[1]);
+
+                        break;
+                    }
+
+                case "CARDS":
+                    {
+                        Card[] playerHand = new Card[5], opponentHand = new Card[5];
+
+                        for (int i = 1; i <= 5; i ++)
+                        {
+                            Card card = new Card();
+                            string[] cardComponents = dataComponents[i].Split(',');
+
+                            card.MySuit = (Card.SUIT) Enum.Parse(typeof(Card.SUIT), cardComponents[0]);
+                            card.MyValue = (Card.VALUE) Enum.Parse(typeof(Card.VALUE), cardComponents[1]);
+
+                            playerHand[i - 1] = card;
+                        }
+
+                        for (int i = 6; i <= 10; i++)
+                        {
+                            Card card = new Card();
+                            string[] cardComponents = dataComponents[i].Split(',');
+
+                            card.MySuit = (Card.SUIT) Enum.Parse(typeof(Card.SUIT), cardComponents[0]);
+                            card.MyValue = (Card.VALUE) Enum.Parse(typeof(Card.VALUE), cardComponents[1]);
+
+                            opponentHand[i - 6] = card;
+                        }
+
+                        DealCards.displayCards(playerHand, opponentHand);
 
                         break;
                     }
