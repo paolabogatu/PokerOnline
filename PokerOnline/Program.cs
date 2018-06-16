@@ -46,7 +46,7 @@ namespace PokerOnline
         private static void StartChatWindow()
         {
             Application.EnableVisualStyles();
-            Application.Run(new Form());
+            Application.Run(new ChatWindow());
         }
     }
 }

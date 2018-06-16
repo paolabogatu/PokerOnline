@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Card.cs" />
+    <Compile Include="ChatWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChatWindow.Designer.cs">
+      <DependentUpon>ChatWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="DealCards.cs" />
     <Compile Include="DeckOfCards.cs" />
     <Compile Include="DrawCards.cs" />
@@ -53,6 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ChatWindow.resx">
+      <DependentUpon>ChatWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
