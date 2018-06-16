@@ -12,19 +12,10 @@ namespace PokerOnline
 
             // Ask clients if they want to host a new game or join an existing one.
             ServerOrClient();
-
-            Thread thread = new Thread(() => StartChatWindow());
-            thread.Start();
-
+            
             GameLoop();
         }
-
-        private static void StartChatWindow()
-        {
-            Application.EnableVisualStyles();
-            Application.Run(new ChatWindow());
-        }
-
+        
         private static void PrepareConsole ()
         {
             Console.SetWindowSize(65, 40);
@@ -44,7 +35,6 @@ namespace PokerOnline
             char selection = ' ';
             while (!selection.Equals('Y') && !selection.Equals('N'))
             {
-                Console.WriteLine("Play again? Y-N");
                 selection = Convert.ToChar(Console.ReadLine().ToUpper());
 
                 if (selection.Equals('Y'))
@@ -59,13 +49,16 @@ namespace PokerOnline
             {
                 // Start server.
 
-
+                Server server = new Server();
             }
             else
             {
                 // Connect to a server.
 
+                Console.WriteLine("Type the IP address of the server.");
+                string address = Console.ReadLine();
 
+                Client client = new Client(address);
             }
         }
 

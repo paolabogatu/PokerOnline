@@ -16,5 +16,10 @@ namespace PokerOnline
         {
             InitializeComponent();
         }
+
+        public void AddMessage(string message)
+        {
+            chatTextBox.AppendText(message + "\n");
+        }
     }
 }

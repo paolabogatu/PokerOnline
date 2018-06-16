@@ -51,12 +51,14 @@
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Client.cs" />
     <Compile Include="DealCards.cs" />
     <Compile Include="DeckOfCards.cs" />
     <Compile Include="DrawCards.cs" />
     <Compile Include="HandEvaluator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
