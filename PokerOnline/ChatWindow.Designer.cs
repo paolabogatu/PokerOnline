@@ -51,6 +51,7 @@
             this.sendTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.sendTextBox.Size = new System.Drawing.Size(204, 48);
             this.sendTextBox.TabIndex = 1;
+            this.sendTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.sendTextBox_KeyDown);
             // 
             // sendButton
             // 
@@ -60,6 +61,7 @@
             this.sendButton.TabIndex = 2;
             this.sendButton.Text = "Enter";
             this.sendButton.UseVisualStyleBackColor = true;
+            this.sendButton.Click += new System.EventHandler(this.sendButton_Click);
             // 
             // ChatWindow
             // 

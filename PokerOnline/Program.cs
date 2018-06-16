@@ -49,7 +49,10 @@ namespace PokerOnline
             {
                 // Start server.
 
-                Server server = new Server();
+                Console.WriteLine("Player name:");
+                string name = Console.ReadLine();
+
+                Server server = new Server(name);
             }
             else
             {
@@ -58,7 +61,10 @@ namespace PokerOnline
                 Console.WriteLine("Type the IP address of the server.");
                 string address = Console.ReadLine();
 
-                Client client = new Client(address);
+                Console.WriteLine("Player name:");
+                string name = Console.ReadLine();
+
+                Client client = new Client(address, name);
             }
         }
 
